@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autorização Conta Azul</title>
+</head>
+<body>
+    <h1>Autenticação Conta Azul</h1>
+    <p>Por favor, clique no botão abaixo para autorizar a nossa aplicação a acessar seus dados na Conta Azul.</p>
+
+    <!-- Botão para iniciar o fluxo de autorização -->
+    <button id="authButton">Autorizar Acesso</button>
+
+    <!-- Referência ao arquivo de script JS -->
+    <script src="server.js">
+        document.getElementById('authButton').addEventListener('click', function() {
+            const clientId = '2gthjdhe4djrsirt54i32fv8ej'; // Substitua com seu Client ID
+           const redirectUri = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
+// Substitua com seu redirect URI
+            const scope = 'read_write'; // Ou 'read' dependendo do que você precisa acessar
+            const authorizationUrl = `https://auth.contaazul.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+
+            window.location.href = authorizationUrl;  // Redireciona o usuário para o fluxo de autorização
+        });
+    </script>
+</body>
+</html>
