@@ -1,21 +1,20 @@
 const express = require('express');
 const axios = require('axios');
+const qs = require('qs'); // <-- adicione isso
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ✅ Substitua essa URL pela URL gerada pelo Render após o deploy
-const redirectUri = 'https://api-contaazul.onrender.com/oauth2/callback'; // exemplo
+// URL de redirecionamento (a mesma configurada na Conta Azul)
+const redirectUri = 'https://api-contaazul.onrender.com/oauth2/callback';
 
-// 🔐 Pegando dados do ambiente (configure no painel do Render)
+// Use variáveis de ambiente no Render
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 
-// 🔹 Rota principal
 app.get('/', (req, res) => {
   res.send('Servidor Express no Render está rodando!');
 });
 
-// 🔁 Rota de callback da Conta Azul
 app.get('/oauth2/callback', async (req, res) => {
   const authorizationCode = req.query.code;
 
@@ -24,15 +23,21 @@ app.get('/oauth2/callback', async (req, res) => {
   }
 
   try {
-    const response = await axios.post('https://auth.contaazul.com/oauth2/token', null, {
-      params: {
+    const response = await axios.post(
+      'https://auth.contaazul.com/oauth2/token',
+      qs.stringify({
         grant_type: 'authorization_code',
         code: authorizationCode,
         redirect_uri: redirectUri,
         client_id: clientId,
         client_secret: clientSecret
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    });
+    );
 
     const accessToken = response.data.access_token;
     res.send(`✅ Token de acesso recebido: ${accessToken}`);
@@ -42,7 +47,6 @@ app.get('/oauth2/callback', async (req, res) => {
   }
 });
 
-// 🚀 Inicia o servidor (sem HTTPS, pois Render já oferece)
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
