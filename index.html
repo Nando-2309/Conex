@@ -12,16 +12,16 @@
     <!-- Botão para iniciar o fluxo de autorização -->
     <button id="authButton">Autorizar Acesso</button>
 
-    <!-- Referência ao arquivo de script JS -->
-    <script src="server.js">
+    <!-- JS separado (pode ser inline ou em outro arquivo .js) -->
+    <script>
         document.getElementById('authButton').addEventListener('click', function() {
-            const clientId = '2gthjdhe4djrsirt54i32fv8ej'; // Substitua com seu Client ID
-           const redirectUri = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
-// Substitua com seu redirect URI
-            const scope = 'read_write'; // Ou 'read' dependendo do que você precisa acessar
+            const clientId = '2gthjdhe4djrsirt54i32fv8ej'; 
+            const redirectUri = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
+            const scope = 'read_write';
+            
             const authorizationUrl = `https://auth.contaazul.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
-
-            window.location.href = authorizationUrl;  // Redireciona o usuário para o fluxo de autorização
+            
+            window.location.href = authorizationUrl;  
         });
     </script>
 </body>
