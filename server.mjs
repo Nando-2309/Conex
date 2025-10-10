@@ -20,17 +20,19 @@ app.get("/oauth2/callback", async (req, res) => {
     const tokenUrl = "https://api.contaazul.com/oauth2/token";
 
     try {
-    const payload = qs.stringify({
-    grant_type: "authorization_code",
-    code: code,
-    redirect_uri: REDIRECT_URI,
-    client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET
-});
+        const payload = qs.stringify({
+            grant_type: "authorization_code",
+            code: code,
+            redirect_uri: REDIRECT_URI
+        });
 
-const response = await axios.post(tokenUrl, payload, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }
-});
+        const response = await axios.post(tokenUrl, payload, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            auth: {
+                username: CLIENT_ID,
+                password: CLIENT_SECRET
+            }
+        });
 
         // Salva o token globalmente
         accessToken = response.data.access_token;
