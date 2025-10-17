@@ -8,7 +8,8 @@ const CLIENT_ID = process.env.clientId;
 const CLIENT_SECRET = process.env.clientSecret;
 const REDIRECT_URI = process.env.redirectUri;
 
-let accessToken = null; // Aqui vamos armazenar o token recebido
+let accessToken = null;
+let refreshToken = null; // Novo
 
 app.get("/oauth2/callback", async (req, res) => {
     const code = req.query.code;
@@ -34,11 +35,13 @@ app.get("/oauth2/callback", async (req, res) => {
             }
         });
 
-        // Salva o token globalmente
         accessToken = response.data.access_token;
-        console.log("✅ Token de acesso recebido:", accessToken);
+        refreshToken = response.data.refresh_token; // Armazena o refresh token
 
-        res.send(`Token de acesso recebido com sucesso!<br>${accessToken}`);
+        console.log("✅ Access token:", accessToken);
+        console.log("🔄 Refresh token:", refreshToken);
+
+        res.send(`Token de acesso recebido com sucesso!<br>Access Token: ${accessToken}<br>Refresh Token: ${refreshToken}`);
 
     } catch (error) {
         console.error("❌ Erro ao obter token:", error.response?.data || error.message);
@@ -47,27 +50,4 @@ app.get("/oauth2/callback", async (req, res) => {
             details: error.response?.data || error.message
         });
     }
-});
-
-// Exemplo de rota que usa o token para chamar a API da Conta Azul
-app.get("/meu-perfil", async (req, res) => {
-    if (!accessToken) return res.status(400).send("Token não disponível. Faça login primeiro.");
-
-    try {
-        const response = await axios.get("https://api.contaazul.com/v1/users/me", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        console.error("❌ Erro ao chamar API:", error.response?.data || error.message);
-        res.status(500).json({ error: error.response?.data || error.message });
-    }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
