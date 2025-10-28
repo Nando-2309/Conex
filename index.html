@@ -9,19 +9,17 @@
     <h1>Autenticação Conta Azul</h1>
     <p>Por favor, clique no botão abaixo para autorizar a nossa aplicação a acessar seus dados na Conta Azul.</p>
 
-    <!-- Botão para iniciar o fluxo de autorização -->
     <button id="authButton">Autorizar Acesso</button>
 
-    <!-- JS separado (pode ser inline ou em outro arquivo .js) -->
     <script>
         document.getElementById('authButton').addEventListener('click', function() {
-            const clientId = '2gthjdhe4djrsirt54i32fv8ej'; 
-            const redirectUri = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
-            const scope = 'read_write';
+            const CLIENT_ID = '2gthjdhe4djrsirt54i32fv8ej'; 
+            const REDIRECT_URI = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
+            const SCOPE = 'read_write';
             
-            const authorizationUrl = `https://auth.contaazul.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+            const authorizationUrl = `https://auth.contaazul.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}`;
             
-            window.location.href = authorizationUrl;  
+            window.location.href = authorizationUrl;
         });
     </script>
 </body>
