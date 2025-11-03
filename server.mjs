@@ -23,16 +23,14 @@ app.get("/oauth2/callback", async (req, res) => {
     try {
         const payload = qs.stringify({
             grant_type: "authorization_code",
+            client_id: CLIENT_ID,          // Adicionando client_id no payload
+            client_secret: CLIENT_SECRET,  // Adicionando client_secret no payload
             code: code,
             redirect_uri: REDIRECT_URI
         });
 
         const response = await axios.post(tokenUrl, payload, {
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            auth: {
-                username: CLIENT_ID,
-                password: CLIENT_SECRET
-            }
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
         });
 
         accessToken = response.data.access_token;
@@ -50,4 +48,54 @@ app.get("/oauth2/callback", async (req, res) => {
             details: error.response?.data || error.message
         });
     }
+});
+
+// Endpoint para trocar o refresh token por um novo access token
+app.post("/oauth2/refresh", async (req, res) => {
+    const refreshTokenFromRequest = req.body.refresh_token || refreshToken;
+
+    if (!refreshTokenFromRequest) {
+        return res.status(400).json({ error: "Refresh token não fornecido" });
+    }
+
+    const tokenUrl = "https://api.contaazul.com/oauth2/token";
+
+    try {
+        const payload = qs.stringify({
+            grant_type: "refresh_token",
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            refresh_token: refreshTokenFromRequest
+        });
+
+        const response = await axios.post(tokenUrl, payload, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        });
+
+        accessToken = response.data.access_token;
+        refreshToken = response.data.refresh_token; // Atualiza o refresh token
+
+        console.log("✅ Novo Access Token:", accessToken);
+        console.log("🔄 Novo Refresh Token:", refreshToken);
+
+        res.json({
+            message: "Access token renovado com sucesso!",
+            access_token: accessToken,
+            refresh_token: refreshToken
+        });
+
+    } catch (error) {
+        console.error("❌ Erro ao renovar token:", error.response?.data || error.message);
+        res.status(500).json({
+            error: "Erro ao renovar token do Conta Azul",
+            details: error.response?.data || error.message
+        });
+    }
+});
+
+// Usar a variável PORT fornecida pela plataforma (Render, Heroku, etc.)
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
