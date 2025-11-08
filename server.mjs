@@ -4,9 +4,10 @@ import qs from "qs";
 
 const app = express();
 
-const CLIENT_ID = process.env.clientId;
-const CLIENT_SECRET = process.env.clientSecret;
-const REDIRECT_URI = process.env.redirectUri;
+// Acessando corretamente as variáveis de ambiente
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
 let accessToken = null;
 let refreshToken = null; // Novo
