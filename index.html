@@ -15,10 +15,13 @@
         document.getElementById('authButton').addEventListener('click', function() {
             const CLIENT_ID = '2gthjdhe4djrsirt54i32fv8ej'; 
             const REDIRECT_URI = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
-            const SCOPE = 'read_write';
             
+            // Altere o escopo conforme a documentação da Conta Azul
+            const SCOPE = 'openid profile aws.cognito.signin.user.admin';  // Exemplo de escopo comum
+
             const authorizationUrl = `https://auth.contaazul.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}`;
             
+            // Redireciona o usuário para a página de autorização da Conta Azul
             window.location.href = authorizationUrl;
         });
     </script>
