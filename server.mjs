@@ -3,14 +3,16 @@ import axios from "axios";
 import qs from "qs";
 
 const app = express();
+app.use(express.json());
 
-// Acessando corretamente as variáveis de ambiente
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
+// === SEUS DADOS ===
+const CLIENT_ID = "2gthjdhe4djrsirt54i32fv8ej";
+const CLIENT_SECRET = "bsa9hb57ghv54prmkhkb7uu2aielsduar1mnqkh32qap9jr8175";
+const REDIRECT_URI = "https://api-contaazul.onrender.com/oauth2/callback";
+// ==================
 
 let accessToken = null;
-let refreshToken = null; // Novo
+let refreshToken = null;
 
 app.get("/oauth2/callback", async (req, res) => {
     const code = req.query.code;
@@ -24,23 +26,29 @@ app.get("/oauth2/callback", async (req, res) => {
     try {
         const payload = qs.stringify({
             grant_type: "authorization_code",
-            client_id: CLIENT_ID,          // Adicionando client_id no payload
-            client_secret: CLIENT_SECRET,  // Adicionando client_secret no payload
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
             code: code,
             redirect_uri: REDIRECT_URI
         });
 
         const response = await axios.post(tokenUrl, payload, {
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
         });
 
         accessToken = response.data.access_token;
-        refreshToken = response.data.refresh_token; // Armazena o refresh token
+        refreshToken = response.data.refresh_token;
 
         console.log("✅ Access token:", accessToken);
         console.log("🔄 Refresh token:", refreshToken);
 
-        res.send(`Token de acesso recebido com sucesso!<br>Access Token: ${accessToken}<br>Refresh Token: ${refreshToken}`);
+        res.send(`
+            <h2>Token recebido com sucesso</h2>
+            <p><b>Access Token:</b> ${accessToken}</p>
+            <p><b>Refresh Token:</b> ${refreshToken}</p>
+        `);
 
     } catch (error) {
         console.error("❌ Erro ao obter token:", error.response?.data || error.message);
@@ -51,7 +59,7 @@ app.get("/oauth2/callback", async (req, res) => {
     }
 });
 
-// Endpoint para trocar o refresh token por um novo access token
+// Endpoint para renovar o token
 app.post("/oauth2/refresh", async (req, res) => {
     const refreshTokenFromRequest = req.body.refresh_token || refreshToken;
 
@@ -70,11 +78,13 @@ app.post("/oauth2/refresh", async (req, res) => {
         });
 
         const response = await axios.post(tokenUrl, payload, {
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
         });
 
         accessToken = response.data.access_token;
-        refreshToken = response.data.refresh_token; // Atualiza o refresh token
+        refreshToken = response.data.refresh_token;
 
         console.log("✅ Novo Access Token:", accessToken);
         console.log("🔄 Novo Refresh Token:", refreshToken);
@@ -94,9 +104,8 @@ app.post("/oauth2/refresh", async (req, res) => {
     }
 });
 
-// Usar a variável PORT fornecida pela plataforma (Render, Heroku, etc.)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
