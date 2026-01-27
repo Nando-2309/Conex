@@ -6,8 +6,8 @@ const app = express();
 app.use(express.json());
 
 // === SEUS DADOS ===
-const CLIENT_ID = "2gthjdhe4djrsirt54i32fv8ej";
-const CLIENT_SECRET = "bsa9hb57ghv54prmkhkb7uu2aielsduar1mnqkh32qap9jr8175";
+const CLIENT_ID = "4p4s8h29eofupki7r163c1firg";
+const CLIENT_SECRET = "fuoj305gsv3elpsh55u44edob4ktireuul9q1ck1pq6bl85uvmi";
 const REDIRECT_URI = "https://api-contaazul.onrender.com/oauth2/callback";
 // ==================
 
