@@ -6,8 +6,8 @@ const app = express();
 app.use(express.json());
 
 // === SEUS DADOS ===
-const CLIENT_ID = "4p4s8h29eofupki7r163c1firg";
-const CLIENT_SECRET = "fuoj305gsv3elpsh55u44edob4ktireuul9q1ck1pq6bl85uvmi";
+const CLIENT_ID = "6h4brsaeu3rsm057t47eegmkvs";
+const CLIENT_SECRET = "vftj0r7101cq83tatcnccfqcjoel663pptg1adshu0pavk3u3n8";
 const REDIRECT_URI = "https://api-contaazul.onrender.com/oauth2/callback";
 // ==================
 
@@ -109,3 +109,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
+      
