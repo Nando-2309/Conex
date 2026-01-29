@@ -1,29 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autorização Conta Azul</title>
-</head>
-<body>
-    <h1>Autenticação Conta Azul</h1>
-    <p>Por favor, clique no botão abaixo para autorizar a nossa aplicação a acessar seus dados na Conta Azul.</p>
+<script>
+document.getElementById('authButton').addEventListener('click', function () {
+    const CLIENT_ID = '6h4brsaeu3rsm057t47eegmkvs';
+    const REDIRECT_URI = encodeURIComponent(
+        'https://api-contaazul.onrender.com/oauth2/callback'
+    );
 
-    <button id="authButton">Autorizar Acesso</button>
+    const SCOPE = encodeURIComponent(
+        'openid profile aws.cognito.signin.user.admin'
+    );
 
-    <script>
-        document.getElementById('authButton').addEventListener('click', function() {
-            const CLIENT_ID = '6h4brsaeu3rsm057t47eegmkvs'; 
-            const REDIRECT_URI = encodeURIComponent('https://api-contaazul.onrender.com/oauth2/callback');
-            
-            // Altere o escopo conforme a documentação da Conta Azul
-            const SCOPE = 'openid profile aws.cognito.signin.user.admin';  // Exemplo de escopo comum
+    const STATE = 'saopaulo123';
 
-            const authorizationUrl = `https://auth.contaazul.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}`;
-            
-            // Redireciona o usuário para a página de autorização da Conta Azul
-            window.location.href = authorizationUrl;
-        });
-    </script>
-</body>
-</html>
+    const authorizationUrl =
+        `https://auth.contaazul.com/login` +
+        `?response_type=code` +
+        `&client_id=${CLIENT_ID}` +
+        `&redirect_uri=${REDIRECT_URI}` +
+        `&scope=${SCOPE}` +
+        `&state=${STATE}`;
+
+    window.location.href = authorizationUrl;
+});
+</script>
