@@ -1,8 +1,8 @@
 import 'dotenv/config';
-
 import express from "express";
 import axios from "axios";
 import qs from "qs";
+import { Buffer } from "buffer";
 
 const app = express();
 app.use(express.json());
@@ -36,33 +36,38 @@ app.get("/oauth2/callback", async (req, res) => {
     const tokenUrl = "https://api.contaazul.com/oauth2/token";
 
     try {
+        const basicAuth = Buffer
+            .from(`${CLIENT_ID}:${CLIENT_SECRET}`)
+            .toString("base64");
+
         const payload = qs.stringify({
             grant_type: "authorization_code",
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
-            redirect_uri: REDIRECT_URI,
-            code: code
+            code: code,
+            redirect_uri: REDIRECT_URI
         });
 
-        const response = await axios.post(tokenUrl, payload, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+        const response = await axios.post(
+            tokenUrl,
+            payload,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": `Basic ${basicAuth}`
+                }
             }
-        });
+        );
 
         accessToken = response.data.access_token;
         refreshToken = response.data.refresh_token;
 
-        console.log("✅ Access Token:", accessToken);
+        console.log("✅ Access Token Conta Azul:", accessToken);
         console.log("🔄 Refresh Token:", refreshToken);
 
-        res.send(`
-            <h2>Autenticação concluída com sucesso ✅</h2>
-            <p><b>Access Token:</b></p>
-            <pre>${accessToken}</pre>
-            <p><b>Refresh Token:</b></p>
-            <pre>${refreshToken}</pre>
-        `);
+        res.json({
+            message: "Autenticação concluída com sucesso",
+            access_token: accessToken,
+            refresh_token: refreshToken
+        });
 
     } catch (error) {
         console.error(
@@ -92,23 +97,28 @@ app.post("/oauth2/refresh", async (req, res) => {
     const tokenUrl = "https://api.contaazul.com/oauth2/token";
 
     try {
+        const basicAuth = Buffer
+            .from(`${CLIENT_ID}:${CLIENT_SECRET}`)
+            .toString("base64");
+
         const payload = qs.stringify({
             grant_type: "refresh_token",
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
             refresh_token: tokenToRefresh
         });
 
-        const response = await axios.post(tokenUrl, payload, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+        const response = await axios.post(
+            tokenUrl,
+            payload,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": `Basic ${basicAuth}`
+                }
             }
-        });
+        );
 
         accessToken = response.data.access_token;
         refreshToken = response.data.refresh_token;
-
-        console.log("♻️ Token renovado");
 
         res.json({
             message: "Token renovado com sucesso",
@@ -130,7 +140,7 @@ app.post("/oauth2/refresh", async (req, res) => {
 });
 
 // ==================
-// ENDPOINT DE TESTE (opcional)
+// ENDPOINT DE TESTE
 // ==================
 app.get("/", (req, res) => {
     res.send("🚀 API Conta Azul rodando");
