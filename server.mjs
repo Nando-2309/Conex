@@ -23,7 +23,16 @@ let refreshToken = null;
 // ==================
 // CALLBACK OAUTH2
 // ==================
+
+
+
+
 app.get("/oauth2/callback", async (req, res) => {
+    
+
+     console.log("🔥 CALLBACK FOI CHAMADO");
+    console.log("🔎 Query completa:", req.query);
+
     const { code, state } = req.query;
 
     console.log("🔹 Code recebido:", code);
