@@ -1,24 +1,49 @@
-<script>
-document.getElementById('authButton').addEventListener('click', function () {
-    const CLIENT_ID = '6h4brsaeu3rsm057t47eegmkvs';
-    const REDIRECT_URI = encodeURIComponent(
-        'https://api-contaazul.onrender.com/oauth2/callback'
-    );
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Conta Azul</title>
+</head>
+<body>
 
-    const SCOPE = encodeURIComponent(
-        'openid profile aws.cognito.signin.user.admin'
-    );
+    <button id="authButton">Conectar Conta Azul</button>
 
-    const STATE = 'saopaulo123';
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-     const authorizationUrl =
-        `https://auth.contaazul.com/oauth2/authorize` +   // 👈 AQUI mudou
-        `?response_type=code` +
-        `&client_id=${CLIENT_ID}` +
-        `&redirect_uri=${REDIRECT_URI}` +
-        `&scope=${SCOPE}` +
-        `&state=${STATE}`;
+        const button = document.getElementById('authButton');
 
-    window.location.href = authorizationUrl;
-});
-</script>
+        if (!button) {
+            console.log("Botão não encontrado");
+            return;
+        }
+
+        button.addEventListener('click', function () {
+
+            const CLIENT_ID = '6h4brsaeu3rsm057t47eegmkvs';
+
+            const REDIRECT_URI = encodeURIComponent(
+                'https://api-contaazul.onrender.com/oauth2/callback'
+            );
+
+            const SCOPE = encodeURIComponent(
+                'openid profile aws.cognito.signin.user.admin'
+            );
+
+            const STATE = 'saopaulo123';
+
+            const authorizationUrl =
+                `https://auth.contaazul.com/oauth2/authorize` +
+                `?response_type=code` +
+                `&client_id=${CLIENT_ID}` +
+                `&redirect_uri=${REDIRECT_URI}` +
+                `&scope=${SCOPE}` +
+                `&state=${STATE}`;
+
+            window.location.href = authorizationUrl;
+        });
+
+    });
+    </script>
+
+</body>
+</html>
