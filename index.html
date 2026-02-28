@@ -11,8 +11,8 @@ document.getElementById('authButton').addEventListener('click', function () {
 
     const STATE = 'saopaulo123';
 
-    const authorizationUrl =
-        `https://auth.contaazul.com/login` +
+     const authorizationUrl =
+        `https://auth.contaazul.com/oauth2/authorize` +   // 👈 AQUI mudou
         `?response_type=code` +
         `&client_id=${CLIENT_ID}` +
         `&redirect_uri=${REDIRECT_URI}` +
