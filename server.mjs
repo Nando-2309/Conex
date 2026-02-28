@@ -55,6 +55,8 @@ app.get("/oauth2/callback", async (req, res) => {
             redirect_uri: REDIRECT_URI
         });
 
+        console.log("REDIRECT_URI usada na troca:", REDIRECT_URI);
+
         const response = await axios.post(
             tokenUrl,
             payload,
@@ -114,6 +116,7 @@ app.post("/oauth2/refresh", async (req, res) => {
             grant_type: "refresh_token",
             refresh_token: tokenToRefresh
         });
+
 
         const response = await axios.post(
             tokenUrl,
